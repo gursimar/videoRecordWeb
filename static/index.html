@@ -9,13 +9,16 @@
         -->
 
         <script src="static/bower_components/angular/angular.js"></script>
+        <script src="static/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
         <script src="static/js/app.js"></script>
+        <script src="static/js/State1Ctrl.js"></script>
+        <script src="static/js/State2Ctrl.js"></script>
         <link rel="stylesheet" href=""/>
     </head>
 
     <body ng-app="sampleApp" ng-controller="AppCtrl">
-        <ul>
-            <li ng-repeat="x in products">{{x}}</li>
-        </ul>
+        <div ui-view></div>
+        <a ui-sref="state1"> State 1 </a>
+        <a ui-sref="state2"> State 2</a>
     </body>
 </html>
