@@ -2,7 +2,10 @@
  * Created by Gursimran on 16-Apr-16.
  */
 
-var app = angular.module("sampleApp", ['ui.router']);
+var app = angular.module("sampleApp", [
+    'ui.router',
+    'ui.bootstrap'
+]);
 app.controller("AppCtrl", function($scope) {
     $scope.products = ["Milk", "Bread", "Cheese"];
 });
