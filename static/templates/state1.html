@@ -5,8 +5,14 @@
     <title>State 1</title>
 </head>
 <body>
-    <ul>
-        <li ng-repeat="item in items">{{ item }}</li>
-    </ul>
+    <br>
+    <p>
+        <video id="camera-preview" controls style="border: 1px solid rgb(15, 158, 238); width: 94%;"></video>
+    </p><hr />
+
+    <div class="btn-group">
+        <label class="btn btn-primary" ng-click="onRecord()" ng-model="recordingModel" uib-btn-radio="'StartRecording'">Start Recording</label>
+        <label class="btn btn-primary" ng-click = "onStopRecord()" ng-model="recordingModel" uib-btn-radio="'StopRecording'">Stop Recording</label>
+    </div>
 </body>
 </html>
