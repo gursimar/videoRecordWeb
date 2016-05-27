@@ -2,7 +2,7 @@
  * Created by Gursimran on 16-Apr-16.
  */
 
-app.controller("State2Ctrl", function($scope) {
+app.controller("State2Ctrl", function($scope, $http) {
     var recordRTC;
     var gumStream;
     var cameraPreview = document.getElementById('camera-preview');
@@ -48,11 +48,8 @@ app.controller("State2Ctrl", function($scope) {
     }
 
     $scope.onStopRecord = function() {
-        recordRTC.stopRecording(function (audioVideoURL) {
-            var Whammy = recordRTC.Whammy;
-            var video = new Whammy.Video(100);
-            console.log (audioVideoURL);
-
+        recordRTC.stopRecording();
+        recordRTC.getDataURL(function (audioVideoDataURL) {
             // Get tracks
             var audioTrack = gumStream.getTracks()[0];
             var videoTrack = gumStream.getTracks()[1];
@@ -69,8 +66,36 @@ app.controller("State2Ctrl", function($scope) {
             // Write the data to disk
             console.log("Recording stopped");
             console.log("Saving file");
+            //console.log (audioVideoDataURL);
+            postData(audioVideoDataURL);
+            console.log ("Data posted")
             recordRTC.save('simar.mp4');
             console.log("File saved");
         });
+    }
+
+    function postData(data) {
+        fileName = getRandomString();
+        files = {
+            name: fileName + '.webm',
+            type: 'video/webm',
+            contents: data
+        };
+
+        $http.post("/api/video", JSON.stringify(files))
+        .success(function (data) {
+            console.log("working");
+        })
+    }
+
+    function getRandomString() {
+        if (window.crypto) {
+            var a = window.crypto.getRandomValues(new Uint32Array(3)),
+                token = '';
+            for (var i = 0, l = a.length; i < l; i++) token += a[i].toString(36);
+            return token;
+        } else {
+            return (Math.random() * new Date().getTime()).toString(36).replace( /\./g , '');
+        }
     }
 });
