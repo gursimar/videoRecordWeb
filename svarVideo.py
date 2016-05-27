@@ -25,17 +25,21 @@ class HelloWorld(Resource):
         print json_data
         file_name = json_data['name']
         file_type = json_data['type']
+
         contents_base64 = json_data['contents']
         #print contents_base64
-        #contents_arr = contents_base64.split(',')
-        #contents = contents_arr[1]
-        #contents = base64.b64decode(contents)
+        contents_arr = contents_base64.split(',')
+        contents = contents_arr[1]
+        print contents
+
+        contents = base64.b64decode(contents)
         #print contents
-        #print file_name
+        print file_name
         #f = open(projectPath + '\\' + file_name, 'bw')
-        #f = open(projectPath + '\\' + file_name, 'w')
-        #f.write(contents)
-        #f.close()
+        f = open(projectPath + '\\' + file_name, 'w')
+        f.write(contents)
+        f.close()
+        print "DDNE"
         #print contents
         #print json_data
         return 1
