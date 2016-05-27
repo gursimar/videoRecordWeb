@@ -66,7 +66,7 @@ app.controller("State2Ctrl", function($scope, $http) {
             // Write the data to disk
             console.log("Recording stopped");
             console.log("Saving file");
-            //console.log (audioVideoDataURL);
+            console.log (audioVideoDataURL);
             postData(audioVideoDataURL);
             console.log ("Data posted")
             recordRTC.save('simar.mp4');

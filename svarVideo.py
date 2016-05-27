@@ -20,15 +20,32 @@ class HelloWorld(Resource):
         return 1
 
     def post(self):
-        print "req"
-        pass
-
+        print "post hit"
+        json_data = request.get_json(force=True)
+        print json_data
+        file_name = json_data['name']
+        file_type = json_data['type']
+        contents_base64 = json_data['contents']
+        #print contents_base64
+        #contents_arr = contents_base64.split(',')
+        #contents = contents_arr[1]
+        #contents = base64.b64decode(contents)
+        #print contents
+        #print file_name
+        #f = open(projectPath + '\\' + file_name, 'bw')
+        #f = open(projectPath + '\\' + file_name, 'w')
+        #f.write(contents)
+        #f.close()
+        #print contents
+        #print json_data
+        return 1
 
 api.add_resource(HelloWorld, '/api/video')
 
 # Test using this code on cmd
 #from requests import put, get, post
 #put('http://localhost:5000/api/video', data={'data': 'Remember the milk'}).json()
+#post('http://localhost:5000/api/video', data={'data': 'Remember the milk'}).json()
 #get('http://localhost:5000/api/video').json()
 
 #@app.route('/')
