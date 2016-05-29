@@ -1,12 +1,12 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 import base64, os
+import email, quopri
 
 projectPath =  os.path.dirname(os.path.realpath(__file__))
 print projectPath
 app = Flask(__name__)
 api = Api(app)
-
 
 class HelloWorld(Resource):
     def get(self):
@@ -35,13 +35,10 @@ class HelloWorld(Resource):
         contents = base64.b64decode(contents)
         #print contents
         print file_name
-        #f = open(projectPath + '\\' + file_name, 'bw')
-        f = open(projectPath + '\\' + file_name, 'w')
+        f = open(projectPath + '\\' + file_name, 'wb')
         f.write(contents)
         f.close()
-        print "DDNE"
-        #print contents
-        #print json_data
+        print "DONE"
         return 1
 
 api.add_resource(HelloWorld, '/api/video')
