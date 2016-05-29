@@ -1,7 +1,6 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 import base64, os
-import email, quopri
 
 projectPath =  os.path.dirname(os.path.realpath(__file__))
 print projectPath
