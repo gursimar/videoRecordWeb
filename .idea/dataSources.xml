@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="273328350">
+    <data-source source="LOCAL" name="db" uuid="374e35ea-fe19-4f92-8135-37080741b484">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\Gursimran\PyCharmProjects\svarVideo\db.sqlite</jdbc-url>
+      <libraries />
+    </data-source>
+  </component>
+</project>

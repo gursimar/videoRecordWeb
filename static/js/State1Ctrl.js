@@ -13,31 +13,63 @@ app.controller("State1Ctrl", function($scope, $http) {
         gumStream = stream;
         cameraPreview.src = window.URL.createObjectURL(stream);
         cameraPreview.play();
+        cameraPreview.muted = true;
 
         // Set up RecordRTC
         var options = {
-          mimeType: 'video/webm', // or video/mp4 or audio/ogg
-          audioBitsPerSecond: 128000,
-          videoBitsPerSecond: 128000,
-          bitsPerSecond: 128000 // if this line is provided, skip above two
+            recorderType: MediaStreamRecorder,
+            type: 'video',
+            mimeType: 'video/webm', // or video/mp4 or audio/ogg
+            video: {
+                width: 320,
+                height: 240
+            },
+            canvas: {
+                width: 320,
+                height: 240
+            },
+            numberOfAudioChannels: 1,
+
+            bitsPerSecond: 22100, // if this line is provided, skip above two
+            getNativeBlob: false
         };
         recordRTC = RecordRTC(gumStream, options);
+        milliseconds = 5000;
+        recordRTC.setRecordingDuration(milliseconds, $scope.onStopRecord);
+        recordRTC.canvas = {
+            width: 320,
+            height: 240
+        };
+        recordRTC.videoWidth  = 320;
+        recordRTC.videoHeight = 240;
+
+        console.log ("Recording started_A");
         recordRTC.startRecording();
-        console.log ("Recording started");
+        console.log ("Recording started_B");
     }
 
     function errorCallback(error) {
         // maybe another application is using the device
-        console.log ("Error in capturing stream")
+        console.log ("Error in invoking recordRTC")
     }
 
     $scope.onStartRecord = function() {
-        var mediaConstraints = { video: true, audio: true };
+        var vid_constraints = {
+            mandatory: {
+                maxHeight: 180,
+                maxWidth: 360,
+            }
+        };
+        var mediaConstraints = {
+            video: vid_constraints,
+            audio: true
+        };
         navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
         console.log("Requesting stream");
     }
 
     $scope.onStopRecord = function() {
+        console.log ("Stop called")
         var audioTrack = gumStream.getTracks()[0];
         var videoTrack = gumStream.getTracks()[1];
         audioTrack.stop();
@@ -63,7 +95,7 @@ app.controller("State1Ctrl", function($scope, $http) {
                 console.log("File saved");
                 //console.log(dataURL);
                 console.log("==Sending file to server==");
-                postData(dataURL);
+                //postData(dataURL);
                 console.log("Sending data")
             });
         });

@@ -40,8 +40,13 @@ app.factory('AudioService', ['$window', '$http', function($window, $http) {
             audio: true,
             video: false
         }, function (stream) {
-            $window.recordRTC = RecordRTC(stream)
-            //return
+            $window.recordRTC = RecordRTC(stream, {
+                canvas: {
+                    width:320,
+                    height:240
+                },
+                frameInterval:20
+            });
         }, function (err) {
             console.log(err)
             //return
