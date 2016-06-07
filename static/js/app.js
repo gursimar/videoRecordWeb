@@ -17,6 +17,16 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
     // Now setup the state
     $stateProvider
+        .state('login', {
+            url: "/login",
+            templateUrl: "static/templates/login.html",
+            controller: "loginCtrl"
+        })
+        .state('logout', {
+            url: "/logout",
+            templateUrl: "static/templates/logout.html",
+            controller: "logoutCtrl"
+        })
         .state('state1', {
             url: "/state1",
             templateUrl: "static/templates/state1.html",
@@ -28,44 +38,3 @@ app.config(function($stateProvider, $urlRouterProvider) {
             controller: "State2Ctrl"
         })
 })
-
-app.factory('AudioService', ['$window', '$http', function($window, $http) {
-        navigator.userMedia = (
-        $window.navigator.getUserMedia ||
-        $window.navigator.webkitGetUserMedia ||
-        $window.navigator.mozGetUserMedia ||
-        $window.navigator.msGetUserMedia)
-
-        navigator.getUserMedia({
-            audio: true,
-            video: false
-        }, function (stream) {
-            $window.recordRTC = RecordRTC(stream, {
-                canvas: {
-                    width:320,
-                    height:240
-                },
-                frameInterval:20
-            });
-        }, function (err) {
-            console.log(err)
-            //return
-        });
-
-        return {
-            UploadLastRecording: function () {
-                console.log("Uploading last recording");
-                blob = $window.recordRTC.getBlob();
-                fd = new FormData();
-                fd.append('audio', blob);
-                $http.post('/path/to/server', fd,
-                    {
-                        transformRequest: angular.identity,
-                        headers: {'Content-Type': undefined}
-                    }).success(function (data) {
-                        console.log("Posted sound");
-                        return data;
-                    })
-            }
-        }
-    }])

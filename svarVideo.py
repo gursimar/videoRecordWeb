@@ -28,8 +28,8 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    #email = db.Column(db.String(255), unique=True, nullable=False)
-    email = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    #email = db.Column(db.String(255), nullable=False)
     password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
     admin = db.Column(db.Boolean, nullable=False, default=False)
@@ -37,6 +37,8 @@ class User(db.Model):
     def __init__(self, email, password, admin=False):
         self.email = email
         self.password = bcrypt.generate_password_hash(password)
+        print self.password
+        #self.password = password
         self.registered_on = datetime.datetime.now()
         self.admin = admin
 
@@ -90,9 +92,9 @@ class HelloWorld(Resource):
 
 api.add_resource(HelloWorld, '/api/video')
 db.create_all()
-firstUser = User("gursimran.singh@aspiringminds.in", "hello")
-db.session.add(firstUser)
-db.session.commit()
+#firstUser = User("gursimran.singh@aspiringminds.in", "hello")
+#db.session.add(firstUser)
+#db.session.commit()
 
 # Test using this code on cmd
 #from requests import put, get, post
@@ -115,6 +117,7 @@ def register():
         email=json_data['email'],
         password=json_data['password']
     )
+    print user
     try:
         db.session.add(user)
         db.session.commit()

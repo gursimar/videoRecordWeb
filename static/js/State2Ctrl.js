@@ -3,9 +3,11 @@
  */
 
 app.controller("State2Ctrl", function($scope, $http) {
-    var recordRTC;
     var gumStream;
     var cameraPreview = document.getElementById('camera-preview');
+    var mediaRecorder;
+    var chunks = [];
+    var count = 0;
 
 
     function successCallback(stream) {
@@ -13,65 +15,76 @@ app.controller("State2Ctrl", function($scope, $http) {
         gumStream = stream;
         cameraPreview.src = window.URL.createObjectURL(stream);
         cameraPreview.play();
+        cameraPreview.muted = true;
 
-        // Set up RecordRTC
-        var options = {
-          mimeType: 'video/webm', // or video/mp4 or audio/ogg
-          audioBitsPerSecond: 128000,
-          videoBitsPerSecond: 128000,
-          bitsPerSecond: 128000 // if this line is provided, skip above two
+        // Set up mediaRecorder
+        mediaRecorder = new MediaRecorder(stream);
+
+        console.log ("Recording started_A");
+        mediaRecorder.start(10);
+        console.log ("Recording started_B");
+
+        mediaRecorder.ondataavailable = function(e) {
+            //log('Data available...');
+            //console.log(e.data);
+            //console.log(e);
+            chunks.push(e.data);
         };
-        recordRTC = RecordRTC(gumStream, options);
+
+        mediaRecorder.onerror = function(e){
+            console.log('Error: ', e);
+        };
+
+        mediaRecorder.onstart = function(){
+            console.log('Started, state = ' + mediaRecorder.state);
+        };
     }
 
     function errorCallback(error) {
         // maybe another application is using the device
-        console.log ("Error in capturing stream")
+        console.log ("Error in invoking recordRTC")
     }
 
-    $scope.onCaptureStream = function() {
-        var mediaConstraints = { video: true, audio: true };
+    $scope.onStartRecord = function() {
+        /*
+        if(getBrowser() == "Chrome"){
+         var mediaConstraints = {"audio": false, "video": { "mandatory": { "minWidth": 320, "maxWidth": 320, "minHeight": 240,"maxHeight": 240 }, "optional": [] } };
+        }else if(getBrowser() == "Firefox"){
+         var mediaConstraints = {audio: true,video: { width: { min: 320, ideal: 320, max: 1280 }, height: { min: 240, ideal: 240, max: 720 }}};
+        }
+        */
+        var vid_constraints = {
+            mandatory: {
+                maxHeight: 240,
+                maxWidth: 320,
+                minHeight: 240,
+                minWidth: 320
+            }
+        };
+
+        var mediaConstraints = {
+            video: vid_constraints,
+            audio: true
+        };
+
         navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
         console.log("Requesting stream");
     }
 
-    $scope.onReleaseStream = function() {
+    $scope.onStopRecord = function() {
+        console.log ("Stop called")
         var audioTrack = gumStream.getTracks()[0];
         var videoTrack = gumStream.getTracks()[1];
         audioTrack.stop();
         videoTrack.stop();
-    }
+	    mediaRecorder.stop();
 
-    $scope.onStartRecord = function() {
-        recordRTC.startRecording();
-        console.log ("Recording started");
-    }
-
-    $scope.onStopRecord = function() {
-        recordRTC.stopRecording();
-        recordRTC.getDataURL(function (audioVideoDataURL) {
-            // Get tracks
-            var audioTrack = gumStream.getTracks()[0];
-            var videoTrack = gumStream.getTracks()[1];
-            console.log ("Tracks")
-            console.log ("-" + audioTrack.kind);
-            console.log ("-" + videoTrack.kind);
-
-            // Capture data and send it upstream
-            //video.src = audioVideoURL;
-            var recordedBlob = recordRTC.getBlob();
-            console.log(recordedBlob);
-            //recordRTC.getDataURL(function(dataURL) { });
-
-            // Write the data to disk
-            console.log("Recording stopped");
-            console.log("Saving file");
-            console.log (audioVideoDataURL);
-            postData(audioVideoDataURL);
-            console.log ("Data posted")
-            recordRTC.save('simar.mp4');
-            console.log("File saved");
-        });
+        // Download data
+		console.log('Stopped  & state = ' + mediaRecorder.state);
+		var blob = new Blob(chunks, {type: "video/webm"});
+        var videoURL = window.URL.createObjectURL(blob);
+        downloadFile(videoURL);
+        //window.open(videoURL, 'Download');
     }
 
     function postData(data) {
@@ -84,8 +97,24 @@ app.controller("State2Ctrl", function($scope, $http) {
 
         $http.post("/api/video", JSON.stringify(files))
         .success(function (data) {
-            console.log("working");
+            console.log("Data successfully sent to server");
         })
+    }
+
+    function downloadFile(dataUrl) {
+        // Construct the a element
+        var link = document.createElement("a");
+        link.download = getRandomString() + '.webm';
+        link.target = "_blank";
+
+        // Construct the uri
+        link.href = dataUrl;
+        document.body.appendChild(link);
+        link.click();
+
+        // Cleanup the DOM
+        document.body.removeChild(link);
+        delete link;
     }
 
     function getRandomString() {

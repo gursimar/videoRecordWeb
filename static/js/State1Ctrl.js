@@ -36,13 +36,14 @@ app.controller("State1Ctrl", function($scope, $http) {
         recordRTC = RecordRTC(gumStream, options);
         milliseconds = 5000;
         recordRTC.setRecordingDuration(milliseconds, $scope.onStopRecord);
+        /*
         recordRTC.canvas = {
             width: 320,
             height: 240
         };
         recordRTC.videoWidth  = 320;
         recordRTC.videoHeight = 240;
-
+        */
         console.log ("Recording started_A");
         recordRTC.startRecording();
         console.log ("Recording started_B");
@@ -56,9 +57,10 @@ app.controller("State1Ctrl", function($scope, $http) {
     $scope.onStartRecord = function() {
         var vid_constraints = {
             mandatory: {
-                maxHeight: 180,
-                maxWidth: 360,
-            }
+                maxHeight: 240,
+                maxWidth: 320,
+                minHeight: 240,
+                minWidth: 320            }
         };
         var mediaConstraints = {
             video: vid_constraints,
