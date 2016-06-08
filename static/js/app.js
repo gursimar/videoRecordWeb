@@ -6,35 +6,51 @@ var app = angular.module("sampleApp", [
     'ui.router',
     'ui.bootstrap'
 ]);
-app.controller("AppCtrl", function($scope) {
+app.controller("AppCtrl", function($scope, AuthService) {
     $scope.products = ["Milk", "Bread", "Cheese"];
 });
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
     // For any unmatched url, redirect to /state1
-    $urlRouterProvider.otherwise("/state1");
+    $urlRouterProvider.otherwise("/login");
 
     // Now setup the state
     $stateProvider
         .state('login', {
             url: "/login",
             templateUrl: "static/templates/login.html",
-            controller: "loginCtrl"
+            controller: "loginCtrl",
+            authenticate: false
         })
         .state('logout', {
             url: "/logout",
             templateUrl: "static/templates/logout.html",
-            controller: "logoutCtrl"
+            controller: "logoutCtrl",
+            authenticate: false
         })
         .state('state1', {
             url: "/state1",
             templateUrl: "static/templates/state1.html",
-            controller: "State1Ctrl"
+            controller: "State1Ctrl",
+            authenticate: true
         })
         .state('state2', {
             url: "/state2",
             templateUrl: "static/templates/state2.html",
-            controller: "State2Ctrl"
+            controller: "State2Ctrl",
+            authenticate: true
         })
 })
+
+
+app.run(function ($rootScope, $state, AuthService) {
+    console.log ("hurr");
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
+        if (toState.authenticate && AuthService.isLoggedIn() === false) {
+            console.log ('Not allowed')
+            $state.transitionTo("login");
+            event.preventDefault();
+        }
+    });
+});

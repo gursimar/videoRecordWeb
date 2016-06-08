@@ -17,6 +17,8 @@
         <script src="static/bower_components/recordrtc/RecordRTC.js"></script>
         <script src="static/js/app.js"></script>
         <script src="static/js/services.js"></script>
+        <script src="static/js/loginCtrl.js"></script>
+        <script src="static/js/logoutCtrl.js"></script>
         <script src="static/js/State1Ctrl.js"></script>
         <script src="static/js/State2Ctrl.js"></script>
         <script src="https://cdn.webrtc-experiment.com/gumadapter.js"></script>
@@ -71,8 +73,8 @@
             <div class="collapse navbar-collapse" id="myNavbar">
               <ul class="nav navbar-nav">
                 <li class="active"><a href="#">Home</a></li>
-                <li><a ui-sref="state1">Record video</a></li>
-                <li><a ui-sref="state2">State2</a></li>
+                <li><a ui-sref="state1">RecordRTC</a></li>
+                <li><a ui-sref="state2">MediaRecorder API</a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
@@ -84,11 +86,13 @@
         <div class="container-fluid text-center">
           <div class="row content">
             <div class="col-sm-2 sidenav">
-              <p><a ui-sref="state1">Record Video</a></p>
-              <p><a ui-sref="state2">State2</a></p>
+              <p><a ui-sref="state1">RecordRTC</a></p>
+              <p><a ui-sref="state2">MediaRecorder API</a></p>
             </div>
             <div class="col-sm-8 text-left">
-                <div ui-view></div>
+                <div ui-view>
+                Balle Balle
+                </div>
             </div>
             <div class="col-sm-2 sidenav">
             </div>

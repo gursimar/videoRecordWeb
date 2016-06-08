@@ -6,7 +6,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 import base64, os
 import datetime
 
-
 projectPath =  os.path.dirname(os.path.realpath(__file__))
 print projectPath
 
@@ -127,25 +126,26 @@ def register():
     db.session.close()
     return jsonify({'result': status})
 
-
 @app.route('/api/login', methods=['POST'])
 def login():
     json_data = request.json
     user = User.query.filter_by(email=json_data['email']).first()
+    #print user
+    #print bcrypt.check_password_hash(user.password, json_data['password'])
     if user and bcrypt.check_password_hash(
             user.password, json_data['password']):
         session['logged_in'] = True
         status = True
+        print 'Login success'
+        print user
     else:
         status = False
     return jsonify({'result': status})
-
 
 @app.route('/api/logout')
 def logout():
     session.pop('logged_in', None)
     return jsonify({'result': 'success'})
-
 
 @app.route('/api/status')
 def status():
