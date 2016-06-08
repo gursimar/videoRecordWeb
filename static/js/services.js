@@ -14,7 +14,8 @@ app.factory('AuthService',
       isLoggedIn: isLoggedIn,
       login: login,
       logout: logout,
-      register: register
+      register: register,
+      getUserStatus: getUserStatus
     });
 
     function isLoggedIn() {

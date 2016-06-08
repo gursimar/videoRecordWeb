@@ -47,10 +47,13 @@ app.config(function($stateProvider, $urlRouterProvider) {
 app.run(function ($rootScope, $state, AuthService) {
     console.log ("hurr");
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams, options) {
-        if (toState.authenticate && AuthService.isLoggedIn() === false) {
-            console.log ('Not allowed')
-            $state.transitionTo("login");
-            event.preventDefault();
-        }
+        AuthService.getUserStatus()
+            .then(function(){
+                if (toState.authenticate && AuthService.isLoggedIn() === false) {
+                    console.log ('Not allowed')
+                    $state.transitionTo("login");
+                    event.preventDefault();
+                }
+            })
     });
 });
