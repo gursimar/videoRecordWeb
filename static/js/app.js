@@ -4,10 +4,24 @@
 
 var app = angular.module("sampleApp", [
     'ui.router',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'timer'
 ]);
 app.controller("AppCtrl", function($scope, AuthService) {
     $scope.products = ["Milk", "Bread", "Cheese"];
+                    $scope.timerRunning = true;
+                    $scope.startTimer = function (){
+                        $scope.$broadcast('timer-start');
+                        $scope.timerRunning = true;
+                    };
+                    $scope.stopTimer = function (){
+                        $scope.$broadcast('timer-stop');
+                        $scope.timerRunning = false;
+                    };
+                    $scope.$on('timer-stopped', function (event, args) {
+                        console.log('timer-stopped args = ', args);
+                        alert ('Your timer expired');
+                    });
 });
 
 app.config(function($stateProvider, $urlRouterProvider) {

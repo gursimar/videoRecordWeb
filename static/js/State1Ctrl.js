@@ -7,6 +7,18 @@ app.controller("State1Ctrl", function($scope, $http) {
     var gumStream;
     var cameraPreview = document.getElementById('camera-preview');
 
+    // test socket io implementation
+    console.log('http://' + document.domain + ':' + location.port)
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+        console.log('connected')
+        socket.emit('my event', {data: 'Connected!'});
+    });
+
+    socket.on('my response', function() {
+        console.log('balle balle')
+    });
+
 
     function successCallback(stream) {
         console.log ("Stream Obtained");

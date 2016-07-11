@@ -3,6 +3,7 @@ from flask_restful import Resource, Api, reqparse
 from flask.ext.bcrypt import Bcrypt
 from flask.ext.sqlalchemy import SQLAlchemy
 #from svarVideo.config import BaseConfig
+from flask_socketio import SocketIO
 import base64, os
 import datetime
 
@@ -21,6 +22,13 @@ api = Api(app)
 app.config.from_object(BaseConfig)
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
+socketio = SocketIO(app)
+#socketio.run(app)
+
+@socketio.on('my event')
+def test_message(message):
+    print 'SOCKET IO WORKING'
+    socketio.emit('my response', {'data': 'got it!'})
 
 class User(db.Model):
 
@@ -156,4 +164,6 @@ def status():
         return jsonify({'status': False})
 
 if __name__ == '__main__':
-    app.run()
+    #app.run()
+    socketio.run(app)
+
